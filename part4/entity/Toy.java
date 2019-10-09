@@ -12,7 +12,44 @@ public abstract class Toy {
 	}
 
 	public enum Size {
-		BIG, SMALL, MEDIUM
+		small, medium, big
+	}
+
+	public Toy() {
+		super();
+	}
+
+	public Toy(double price, ChildsAge childsage, Size size) {
+		super();
+		this.price = price;
+		this.childsage = childsage;
+		this.size = size;
+	}
+
+	public Toy(double price, Size size) {
+		super();
+		this.price = price;
+		this.size = size;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		Toy toy;
+		if (obj.getClass().getGenericSuperclass().toString().equals("class entity.Toy")) {
+			toy = (Toy) obj;
+			if (this.price == toy.price && this.size.name() == toy.size.name()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "Toy: " + this.getClass().getSimpleName() + " price: " + this.price + " for children: "
+				+ this.childsage.name() + " size: " + this.size.name();
 	}
 
 	public ChildsAge getChildsage() {

@@ -1,4 +1,4 @@
-package action;
+package service;
 
 public interface ToyAction {
 	
