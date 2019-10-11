@@ -95,6 +95,11 @@ public class ToyRoom {
 		return null;
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
 	public void printToysOfRoom() {
 		for (Toy toy : this.roomToys) {
 			System.out.println(toy.toString());

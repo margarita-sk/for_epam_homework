@@ -15,7 +15,8 @@ public class Main {
 //		toys.add(new ToyCar(100, ChildsAge.from0to3, Size.SMALL));
 
 		File file = new File("D:\\workspace\\HomeworkPart4\\text.txt");
-		Reader reader = new Reader();
+//		File file2 = new File("D:\\workspace\\HomeworkPart4\\wrong.txt");
+		ReaderSource reader = new ReaderSource();
 		ArrayList<Toy> toys = reader.readToysFromFile(file);
 
 		ToyRoom room1 = new ToyRoom();

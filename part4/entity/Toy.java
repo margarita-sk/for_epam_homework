@@ -35,12 +35,10 @@ public abstract class Toy {
 	@Override
 	public boolean equals(Object obj) {
 		Toy toy;
-		if (obj.getClass().getGenericSuperclass().toString().equals("class entity.Toy")) {
+		if (obj.getClass().getGenericSuperclass().equals(this.getClass().getGenericSuperclass())) {
 			toy = (Toy) obj;
 			if (this.price == toy.price && this.size.name() == toy.size.name()) {
 				return true;
-			} else {
-				return false;
 			}
 		}
 		return false;
