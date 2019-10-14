@@ -1,0 +1,12 @@
+Doll price: -120.3, for children from4to3, size: fdf.
+Ball price: 12 dfs for children size: big. vfdafad
+Cube price: -2330.2, for children from0to3, size: medium.
+ToyCar price: 300, for children from0to18, size: big
+Doll price: 111.3, for children from0to3, size: 
+Doll price: 120.3, for children from0to3, size: small.
+Ball price: 12 dfs for children from-3to7, size: big. vfdafad
+Cube price: 3000.2, for children from0to3, size: medium.
+ToyCar price: 300, for children from8to18, size: 
+Ball price: 12 dfs for children from4to7, size: big. vfdafad
+Cube price: 30.2, for children  size: medium.
+ToyCar price: 300, for children from8to18, size: big

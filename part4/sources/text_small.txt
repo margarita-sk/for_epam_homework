@@ -1,0 +1,2 @@
+Doll price: 120.3, for children from0to3, size: small.
+Ball price: 12 dfs for children from4to7, size: big.

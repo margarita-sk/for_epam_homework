@@ -4,8 +4,8 @@ import service.ToyAction;
 
 public class Ball extends Toy implements ToyAction {
 
-	public Ball(double price, ChildsAge childsage, Size size) {
-		super(price, childsage, size);
+	public Ball(ToyTypes type, double price, ChildsAge childsage, Size size) {
+		super(type, price, childsage, size);
 	}
 
 	@Override

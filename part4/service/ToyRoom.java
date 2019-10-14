@@ -2,21 +2,23 @@ package service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 import entity.Toy;
+import entity.Toy.ChildsAge;
 import entity.Toy.Size;
+import entity.Toy.ToyTypes;
+import service.CompareByOneParameter.Parameter;
 
 public class ToyRoom {
 
 	private ArrayList<Toy> roomToys = new ArrayList<Toy>();
 
-	public ArrayList<Toy> createRoom(int roomCapacity, double totalCoast, String childAge, ArrayList<Toy> toys) {
+	public ArrayList<Toy> createRoom(int roomCapacity, double totalCoast, ChildsAge childAge, ArrayList<Toy> toys) {
 		double priceToys = 0.0;
 		int counter = 0;
 
 		for (Toy toy : toys) {
-			if (totalCoast > priceToys && toy.getChildsage().name().equals(childAge) && roomCapacity > counter) {
+			if (totalCoast > priceToys && toy.getChildsage().equals(childAge) && roomCapacity > counter) {
 				this.roomToys.add(toy);
 				priceToys += toy.getPrice();
 				counter++;
@@ -25,79 +27,42 @@ public class ToyRoom {
 		return roomToys;
 	}
 
-	public void sortToysByPrice(int compare) {
-
-		Comparator<Toy> comparator = new Comparator<Toy>() {
-			@Override
-			public int compare(Toy o1, Toy o2) {
-				if (o1.getPrice() > o2.getPrice())
-					return compare;
-				if (o1.getPrice() < o2.getPrice())
-					return compare * -1;
-				return 0;
-			}
-		};
+	public void sortToys(Parameter parameter) {
+		CompareByOneParameter comparator = new CompareByOneParameter(parameter);
 		Collections.sort(this.roomToys, comparator);
 		printToysOfRoom();
 	}
 
-	public void sortToysBySize(int compare) {
-
-		Comparator<Toy> comparator = new Comparator<Toy>() {
-
-			@Override
-			public int compare(Toy o1, Toy o2) {
-				if (o1.getSize().ordinal() > o2.getSize().ordinal())
-					return compare;
-				if (o1.getSize().ordinal() < o2.getSize().ordinal())
-					return compare * -1;
-				return 0;
-			}
-		};
+	public void sortToysByPriceAndSize() {
+		CompareByPriceAndSize comparator = new CompareByPriceAndSize();
 		Collections.sort(this.roomToys, comparator);
 		printToysOfRoom();
 	}
 
-	public void sortToysBySizeAndPrice(int compare) {
-		Comparator<Toy> comparator = new Comparator<Toy>() {
-
-			@Override
-			public int compare(Toy o1, Toy o2) {
-				if (o1.getPrice() > o2.getPrice())
-					return compare;
-				else if (o1.getPrice() < o2.getPrice())
-					return compare * -1;
-				else {
-					if (o1.getSize().ordinal() > o2.getSize().ordinal())
-						return compare;
-					if (o1.getSize().ordinal() < o2.getSize().ordinal())
-						return compare * -1;
-					return 0;
-				}
-			}
-		};
-
-		Collections.sort(this.roomToys, comparator);
-		printToysOfRoom();
-	}
-
-	public Toy findCurrentToy(double price, String size) {
-		Toy currentToy = new Toy(price, Size.valueOf(size)) {
-		};
-
-		for (Toy toy : this.roomToys) {
-			if (toy.equals(currentToy)) {
-				System.out.println("You was looking for this toy: " + toy.toString());
-				return toy;
+	public Toy findToyByPrice(double price) {
+		Toy toy = Factory.createToy(ToyTypes.BALL, price, ChildsAge.from0to3, Size.big);
+		CompareByOneParameter compare = new CompareByOneParameter(Parameter.PRICE);
+		for (Toy toyFromRoom : this.roomToys) {
+			if (compare.compare(toyFromRoom, toy) == 0) {
+				System.out.println("You are looking for: " + toyFromRoom);
+				return toyFromRoom;
 			}
 		}
 		System.out.println("There is no such toys...");
 		return null;
 	}
 
-	@Override
-	public int hashCode() {
-		return super.hashCode();
+	public Toy findToyByType(ToyTypes type) {
+		Toy toy = Factory.createToy(type, 0, ChildsAge.from0to3, Size.big);
+		CompareByOneParameter compare = new CompareByOneParameter(Parameter.TYPE);
+		for (Toy toyFromRoom : this.roomToys) {
+			if (compare.compare(toyFromRoom, toy) == 0) {
+				System.out.println("You are looking for: " + toyFromRoom);
+				return toyFromRoom;
+			}
+		}
+		System.out.println("There is no such toys...");
+		return null;
 	}
 
 	public void printToysOfRoom() {
@@ -106,25 +71,8 @@ public class ToyRoom {
 		}
 	}
 
-	public Toy findCurrentToy(String typeClass) {
-
-		for (Toy toy : this.roomToys) {
-			if (toy.getClass().getSimpleName().equals(typeClass)) {
-				System.out.println("You was looking for this toy: " + toy.toString());
-				return toy;
-			}
-		}
-		System.out.println("There is no such toys...");
-		return null;
-
-	}
-
 	public ArrayList<Toy> getRoomToys() {
 		return roomToys;
-	}
-
-	public void setRoomToys(ArrayList<Toy> roomToys) {
-		this.roomToys = roomToys;
 	}
 
 }

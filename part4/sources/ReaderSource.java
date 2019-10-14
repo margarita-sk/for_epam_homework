@@ -1,4 +1,4 @@
-package service;
+package sources;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,13 +9,11 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import entity.Ball;
-import entity.Cube;
-import entity.Doll;
 import entity.Toy;
-import entity.ToyCar;
 import entity.Toy.ChildsAge;
 import entity.Toy.Size;
+import entity.Toy.ToyTypes;
+import service.Factory;
 
 public class ReaderSource {
 
@@ -40,49 +38,51 @@ public class ReaderSource {
 
 			while ((line = buf.readLine()) != null) {
 				double priceToy = 0;
-				String age = null;
-				String sizeToy = null;
-				Toy toy = null;
+				ChildsAge age = null;
+				Size sizeToy = null;
+				ToyTypes type = null;
 
 				Matcher matchPrice = price.matcher(line); // ищем цену
 				if (matchPrice.find()) {
 					priceToy = Double.parseDouble(matchPrice.group());
 				}
 
-				Matcher matchAge = childsage.matcher(line);// ищем возрастной ценз
-				if (matchAge.find()) {
-					age = matchAge.group();
+				Matcher matchAge;
+				Matcher matchSize;
+				matchAge = childsage.matcher(line);
+				matchSize = size.matcher(line);
+				try {
+					if (matchAge.find()) {
+						age = ChildsAge.valueOf(matchAge.group());
+					}
+					if (matchSize.find()) {
+						sizeToy = Size.valueOf(matchSize.group());
+					}
+				} catch (IllegalArgumentException e) {
+					age = null;
+					sizeToy = null;
 				}
 
-				Matcher matchSize = size.matcher(line);// ищем размер
-				if (matchSize.find()) {
-					sizeToy = matchSize.group();
-				}
+				Matcher matcherDoll = doll.matcher(line);
+				if (matcherDoll.find())
+					type = ToyTypes.DOLL;
 
-				if (priceToy != 0 & matchAge != null & matchSize != null) {
-					Matcher matcherDoll = doll.matcher(line);
-					if (matcherDoll.find()) {
-						toy = new Doll(priceToy, ChildsAge.valueOf(age), Size.valueOf(sizeToy));
-					}
+				Matcher matcherCar = car.matcher(line);
+				if (matcherCar.find())
+					type = ToyTypes.TOYCAR;
 
-					Matcher matcherCar = car.matcher(line);
-					if (matcherCar.find()) {
-						toy = new ToyCar(priceToy, ChildsAge.valueOf(age), Size.valueOf(sizeToy));
-					}
+				Matcher matcherCube = cube.matcher(line);
+				if (matcherCube.find())
+					type = ToyTypes.CUBE;
 
-					Matcher matcherBall = ball.matcher(line);
-					if (matcherBall.find()) {
-						toy = new Ball(priceToy, ChildsAge.valueOf(age), Size.valueOf(sizeToy));
-					}
+				Matcher matcherBall = ball.matcher(line);
+				if (matcherBall.find())
+					type = ToyTypes.BALL;
 
-					Matcher matcherCube = cube.matcher(line);
-					if (matcherCube.find()) {
-						toy = new Cube(priceToy, ChildsAge.valueOf(age), Size.valueOf(sizeToy));
-					}
-				}
-
-				if (toy != null)
+				if (priceToy != 0 && age != null && sizeToy != null && type != null) {
+					Toy toy = Factory.createToy(type, priceToy, age, sizeToy);
 					toys.add(toy);
+				}
 
 			}
 
@@ -91,7 +91,6 @@ public class ReaderSource {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return toys;
 
 	}
