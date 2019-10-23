@@ -1,0 +1,2 @@
+ToyType: DOLL price: 120.3, for children FROM0TO3, size: SMALL, type: BARBIE 
+ToyType: BALL price: 12 dfs for children FROM4TO7, size: BIG, type: FOOTBALL 

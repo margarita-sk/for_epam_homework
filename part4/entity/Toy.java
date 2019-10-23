@@ -1,50 +1,34 @@
 package entity;
 
+import enums.AgeTypes;
+import enums.Size;
+import enums.ToyTypes;
+
 public abstract class Toy {
 
-	private ToyTypes type;
+	private ToyTypes toyType;
 	private double price;
-	private ChildsAge childsage;
+	private AgeTypes ageType;
 	private Size size;
 
-	public enum ToyTypes {
-		BALL, CUBE, DOLL, TOYCAR
-	}
-
-	public enum ChildsAge {
-		from0to3, from4to7, from8to18
-	}
-
-	public enum Size {
-		small, medium, big
-	}
-
-	public Toy(ToyTypes type, double price, ChildsAge childsage, Size size) {
+	public Toy(ToyTypes toyType, double price, AgeTypes ageType, Size size, Object obj) {
 		super();
-		this.type = type;
+		this.toyType = toyType;
 		this.price = price;
-		this.childsage = childsage;
+		this.ageType = ageType;
 		this.size = size;
 	}
 
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-	public void setSize(Size size) {
-		this.size = size;
-	}
-
-	public ToyTypes getType() {
-		return type;
+	public ToyTypes getToyType() {
+		return toyType;
 	}
 
 	public double getPrice() {
 		return price;
 	}
 
-	public ChildsAge getChildsage() {
-		return childsage;
+	public AgeTypes getAgeType() {
+		return ageType;
 	}
 
 	public Size getSize() {
@@ -53,29 +37,27 @@ public abstract class Toy {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this.type.equals(((Toy) obj).getType())) {
-			if (this.price == ((Toy) obj).price && this.size.name() == ((Toy) obj).size.name()) {
-				return true;
-			}
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		if (this.toyType.equals(((Toy) obj).toyType) && this.price == ((Toy) obj).price && this.size == ((Toy) obj).size
+				&& this.ageType.equals(((Toy) obj).ageType)) {
+			return true;
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = (int) (prime * result + this.price);
-		result = prime * result + this.childsage.hashCode();
-		result = prime * result + this.size.hashCode();
-		result = prime * result + this.type.hashCode();
-		return result;
+		return super.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return "Toy: " + this.getClass().getSimpleName() + " price: " + this.price + " for children: "
-				+ this.childsage.name() + " size: " + this.size.name();
+		return "Toy: " + this.toyType + " size: " + this.size + " price: " + this.price + " for children from "
+				+ this.ageType.getMin() + " to " + this.ageType.getMax() + " years old";
 	}
 
 }

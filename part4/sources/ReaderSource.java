@@ -9,24 +9,25 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import entity.Toy;
-import entity.Toy.ChildsAge;
-import entity.Toy.Size;
-import entity.Toy.ToyTypes;
+import enums.AgeTypes;
+import enums.Size;
+import enums.ToyTypes;
 import service.Factory;
 
 public class ReaderSource {
 
+	public static final Logger LOGGER = Logger.getLogger(ReaderSource.class);
+
 	private String line;
 
-	private Pattern doll = Pattern.compile("[Dd]oll");
-	private Pattern car = Pattern.compile("[Cc]ar");
-	private Pattern cube = Pattern.compile("[Cc]ube");
-	private Pattern ball = Pattern.compile("[Bb]all");
-
+	private Pattern typeToy = Pattern.compile("(?<=ToyType:\\s)[A-Z]*");
 	private Pattern price = Pattern.compile("(?<=price)*\\d+[\\\\.]*\\d+");
-	private Pattern childsage = Pattern.compile("(?<=for children\\s)from\\dto\\d*");
-	private Pattern size = Pattern.compile("(?<=size:\\s)[a-z]*");
+	private Pattern childAge = Pattern.compile("(?<=for children\\s)FROM\\dTO\\d*");
+	private Pattern size = Pattern.compile("(?<=size:\\s)[A-Z]*");
+	private Pattern specialType = Pattern.compile("(?<=type:\\s)[A-Z]*");
 
 	public ArrayList<Toy> readToysFromFile(File file) {
 		ArrayList<Toy> toys = new ArrayList<Toy>();
@@ -38,61 +39,54 @@ public class ReaderSource {
 
 			while ((line = buf.readLine()) != null) {
 				double priceToy = 0;
-				ChildsAge age = null;
+				AgeTypes ageType = null;
 				Size sizeToy = null;
 				ToyTypes type = null;
+				String obj = null;
 
-				Matcher matchPrice = price.matcher(line); // ищем цену
-				if (matchPrice.find()) {
-					priceToy = Double.parseDouble(matchPrice.group());
-				}
+				Matcher matchPrice = price.matcher(line);
+				Matcher matchAgeType = childAge.matcher(line);
+				Matcher matchSize = size.matcher(line);
+				Matcher matchType = typeToy.matcher(line);
+				Matcher matchObj = specialType.matcher(line);
 
-				Matcher matchAge;
-				Matcher matchSize;
-				matchAge = childsage.matcher(line);
-				matchSize = size.matcher(line);
 				try {
-					if (matchAge.find()) {
-						age = ChildsAge.valueOf(matchAge.group());
-					}
-					if (matchSize.find()) {
+					if (matchPrice.find())
+						priceToy = Double.parseDouble(matchPrice.group());
+
+					if (matchAgeType.find())
+						ageType = AgeTypes.valueOf(matchAgeType.group());
+
+					if (matchSize.find())
 						sizeToy = Size.valueOf(matchSize.group());
-					}
+
+					if (matchObj.find())
+						obj = matchObj.group();
+
+					if (matchType.find())
+						type = ToyTypes.valueOf(matchType.group());
 				} catch (IllegalArgumentException e) {
-					age = null;
+					priceToy = 0;
+					ageType = null;
 					sizeToy = null;
+					type = null;
+					obj = null;
+					LOGGER.warn("The line in file contains an illegal toy's parameter", e);
+
 				}
 
-				Matcher matcherDoll = doll.matcher(line);
-				if (matcherDoll.find())
-					type = ToyTypes.DOLL;
-
-				Matcher matcherCar = car.matcher(line);
-				if (matcherCar.find())
-					type = ToyTypes.TOYCAR;
-
-				Matcher matcherCube = cube.matcher(line);
-				if (matcherCube.find())
-					type = ToyTypes.CUBE;
-
-				Matcher matcherBall = ball.matcher(line);
-				if (matcherBall.find())
-					type = ToyTypes.BALL;
-
-				if (priceToy != 0 && age != null && sizeToy != null && type != null) {
-					Toy toy = Factory.createToy(type, priceToy, age, sizeToy);
+				if (priceToy > 0 && ageType != null && sizeToy != null && type != null && obj != null) {
+					Toy toy = Factory.createToy(type, priceToy, ageType, sizeToy, obj);
 					toys.add(toy);
 				}
-
 			}
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.error("File not found", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("InputOutput exception", e);
 		}
 		return toys;
-
 	}
 
 }

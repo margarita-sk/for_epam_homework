@@ -1,0 +1,12 @@
+ToyType: DOLL price: 120.3, for children FROM0TO3, size: SMALL, type: BARBIE 
+ToyType: BALL price: 12 dfs for children FROM4TO7, size: BIG, type: FOOTBALL 
+ToyType: CUBE price: 30.2, for children FROM4TO3, size: MEDIUM, type: NUMBERS
+ToyType: TOYCAR price: 300, for children FROM8TO18, size: BIG, type: AMBULANCE
+ToyType: DOLL price: 111.3, for children FROM0TO3, size: SMALL, type: PINOCCHIO
+ToyType: DOLL price: -120.3, for children FROM0TO3, size: SMALL, type: VOODOO
+ToyType: BALL price: 12 dfs for children FROM4TO7, size: BIG, type: SIMPLEBALL
+ToyType: CUBE price: 3000.2, for children FROM0TO3, size: MEDIUM, type:
+ToyType: TOYCAR price: 300, for children FROM8TO18, size: SMALL, type: POLICE
+ToyType: BALL price: 12 dfs for children FROM4TO7, size: BIG, type: VOLLEYBALL
+ToyType: CUBE price: 30.2, for children FROM0TO3, size: MEDIUM, type: RUBIK
+ToyType: TOYCAR price: 300, for children FROM8TO18, size: BIG, type: FIRETRUCK

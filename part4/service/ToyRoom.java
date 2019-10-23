@@ -3,25 +3,29 @@ package service;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import comparator.CompareByOneParameter;
+import comparator.CompareByPriceAndSize;
 import entity.Toy;
-import entity.Toy.ChildsAge;
-import entity.Toy.Size;
-import entity.Toy.ToyTypes;
-import service.CompareByOneParameter.Parameter;
+import enums.Parameter;
+import enums.ToyTypes;
+import enums.AgeTypes;
 
 public class ToyRoom {
 
+	private int maxNumberOfToys;
+	private int numberOfToys;
+	private double maxCostToysInRoom;
+	private double costToysInRoom;
+	private AgeTypes ageType;
 	private ArrayList<Toy> roomToys = new ArrayList<Toy>();
 
-	public ArrayList<Toy> createRoom(int roomCapacity, double totalCoast, ChildsAge childAge, ArrayList<Toy> toys) {
-		double priceToys = 0.0;
-		int counter = 0;
-
+	public ArrayList<Toy> fillRoomWithToys(ArrayList<Toy> toys) {
 		for (Toy toy : toys) {
-			if (totalCoast > priceToys && toy.getChildsage().equals(childAge) && roomCapacity > counter) {
-				this.roomToys.add(toy);
-				priceToys += toy.getPrice();
-				counter++;
+			if ((this.maxCostToysInRoom >= (costToysInRoom + toy.getPrice())) && (this.maxNumberOfToys > numberOfToys)
+					&& (this.ageType.equals(toy.getAgeType()))) {
+				roomToys.add(toy);
+				this.costToysInRoom += toy.getPrice();
+				this.numberOfToys++;
 			}
 		}
 		return roomToys;
@@ -30,45 +34,79 @@ public class ToyRoom {
 	public void sortToys(Parameter parameter) {
 		CompareByOneParameter comparator = new CompareByOneParameter(parameter);
 		Collections.sort(this.roomToys, comparator);
-		printToysOfRoom();
 	}
 
 	public void sortToysByPriceAndSize() {
 		CompareByPriceAndSize comparator = new CompareByPriceAndSize();
 		Collections.sort(this.roomToys, comparator);
-		printToysOfRoom();
 	}
 
-	public Toy findToyByPrice(double price) {
-		Toy toy = Factory.createToy(ToyTypes.BALL, price, ChildsAge.from0to3, Size.big);
-		CompareByOneParameter compare = new CompareByOneParameter(Parameter.PRICE);
+	public ArrayList<Toy> findToyByPrice(double minPrice, double maxPrice) {
+		ArrayList<Toy> toysBySearch = new ArrayList<Toy>();
 		for (Toy toyFromRoom : this.roomToys) {
-			if (compare.compare(toyFromRoom, toy) == 0) {
-				System.out.println("You are looking for: " + toyFromRoom);
-				return toyFromRoom;
+			if ((toyFromRoom.getPrice() >= minPrice) && (toyFromRoom.getPrice() <= maxPrice)) {
+				toysBySearch.add(toyFromRoom);
 			}
 		}
-		System.out.println("There is no such toys...");
-		return null;
+		return toysBySearch;
 	}
 
-	public Toy findToyByType(ToyTypes type) {
-		Toy toy = Factory.createToy(type, 0, ChildsAge.from0to3, Size.big);
-		CompareByOneParameter compare = new CompareByOneParameter(Parameter.TYPE);
+	public ArrayList<Toy> findToyByType(ToyTypes type) {
+		ArrayList<Toy> toysBySearch = new ArrayList<Toy>();
 		for (Toy toyFromRoom : this.roomToys) {
-			if (compare.compare(toyFromRoom, toy) == 0) {
-				System.out.println("You are looking for: " + toyFromRoom);
-				return toyFromRoom;
-			}
+			if (toyFromRoom.getToyType().equals(type))
+				toysBySearch.add(toyFromRoom);
 		}
-		System.out.println("There is no such toys...");
-		return null;
+		return toysBySearch;
 	}
 
-	public void printToysOfRoom() {
+	@Override
+	public String toString() {
+		String answer = new String();
 		for (Toy toy : this.roomToys) {
-			System.out.println(toy.toString());
+			answer = answer + toy.toString() + "\n";
 		}
+		return answer;
+	}
+
+	public int getNumberOfToys() {
+		return numberOfToys;
+	}
+
+	public void setNumberOfToys(int numberOfToys) {
+		this.numberOfToys = numberOfToys;
+	}
+
+	public double getMaxCostToysInRoom() {
+		return maxCostToysInRoom;
+	}
+
+	public void setMaxCostToysInRoom(double maxCostToysInRoom) {
+		this.maxCostToysInRoom = maxCostToysInRoom;
+	}
+
+	public int getMaxNumberOfToys() {
+		return maxNumberOfToys;
+	}
+
+	public void setMaxNumberOfToys(int maxNumberOfToys) {
+		this.maxNumberOfToys = maxNumberOfToys;
+	}
+
+	public double getCostToysInRoom() {
+		return costToysInRoom;
+	}
+
+	public void setCostToysInRoom(double costToysInRoom) {
+		this.costToysInRoom = costToysInRoom;
+	}
+
+	public AgeTypes getAgeType() {
+		return ageType;
+	}
+
+	public void setAgeType(AgeTypes ageType) {
+		this.ageType = ageType;
 	}
 
 	public ArrayList<Toy> getRoomToys() {

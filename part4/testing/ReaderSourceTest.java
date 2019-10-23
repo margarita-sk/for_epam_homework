@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 import entity.Toy;
-import entity.Toy.ChildsAge;
-import entity.Toy.Size;
-import entity.Toy.ToyTypes;
+import enums.AgeTypes;
+import enums.Size;
+import enums.ToyTypes;
 import service.Factory;
 import sources.ReaderSource;
 
@@ -24,18 +24,15 @@ class ReaderSourceTest {
 		ReaderSource reader = new ReaderSource();
 		ArrayList<Toy> toys = reader.readToysFromFile(file);
 
-		expectedToys.add(Factory.createToy(ToyTypes.DOLL, 120.3, ChildsAge.from0to3, Size.small));
-		expectedToys.add(Factory.createToy(ToyTypes.BALL, 12.0, ChildsAge.from4to7, Size.big));
+		expectedToys.add(Factory.createToy(ToyTypes.DOLL, 120.3, AgeTypes.FROM0TO3, Size.SMALL, "BARBIE"));
+		expectedToys.add(Factory.createToy(ToyTypes.BALL, 12.0, AgeTypes.FROM4TO7, Size.BIG, "FOOTBALL"));
 		assertTrue(toys.equals(expectedToys));
 	}
 
 	@Test
-	void testReadToysFromWrongFile() {
+	void testReadToysFromWrongFile() throws IllegalArgumentException {
 		ReaderSource reader = new ReaderSource();
 		ArrayList<Toy> toys = reader.readToysFromFile(wrongFile);
-
-		expectedToys.add(Factory.createToy(ToyTypes.TOYCAR, 300.0, ChildsAge.from0to3, Size.big));
-		assertTrue(toys.equals(expectedToys));
+		assertTrue(toys.size() == 0);
 	}
-
 }
